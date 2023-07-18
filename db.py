@@ -7,7 +7,7 @@ def get_connection():
 
 
 def insert_user(user_name, password):
-    sql = ' INSERT INTO admin VALUES ( default, %s , %s , %s)'
+    sql = 'INSERT INTO admin VALUES ( default, %s , %s , %s)'
     salt = get_salt()
     hashed_password = get_hash(password, salt)
     try  :
