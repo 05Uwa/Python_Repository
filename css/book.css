@@ -1,0 +1,13 @@
+@charset "UTF-8";
+
+/* body{
+    text-align: center;
+} */
+
+body{
+    display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh; /* ビューポートの高さに合わせてbodyを全画面に広げる */
+      margin: 0; /* デフォルトのbodyの余白を取り除く */
+}

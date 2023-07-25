@@ -38,31 +38,28 @@ def login():
     
 @app.route('/login', methods=['GET'])
 def loginafter():
-    # book_list = book.get_all_library()
-    return render_template('loginafter.html')
+   books_list = book.get_all_library()
+   return render_template('loginafter.html', book_list=books_list)
 
 @app.route('/rootLogin')
 def rootLogin():
     return render_template('rootLogin.html')
 
-@app.route('/ro',methods=['POST'])
-def roLogin():
-    root_name = request.form.get('rootrname')
-    rootpass = request.form.get('rootpass')
+@app.route('/lologin', methods=['GET'])
+def lologin():
+    return render_template('root.html')
 
-    if db.login(root_name,rootpass):
-        return redirect(url_for('loginaf'))
+@app.route('/roLogin',methods=['POST'])
+def roLogin():
+    root_name = request.form.get('Rootname')
+    rootpass = request.form.get('Rootpass')
+
+    if db.rootlogin(root_name,rootpass):
+        return redirect(url_for('lologin'))
     else :
         error='ユーザ名またはパスワードが違います。'
-        return render_template('index.html', error=error)
+        return render_template('rootLogin.html', error=error)
     
-@app.route('/root')
-def root():
-    return render_template('root.html')
-    
-@app.route('/login', methods=['GET'])
-def loginaf():
-    return render_template('root.html')
 
 @app.route('/insertroot')
 def insertRoot():
@@ -76,18 +73,28 @@ def insert():
     isbn = request.args.get('isbn')
     
     count=book.insert_library(title,author,publisher,isbn)
-    if count==1:
-        msg ='図書の登録が完了しました。'
-        return render_template('insertclear.html',msg=msg)
-    else :
-        error ='図書の登録に失敗しました。'
-        return render_template('insertRoot.html',error=error)
-    
+    return render_template('insertClear.html')    
     
 @app.route('/serach')
 def searchList():
     keyword = request.args.get('keyword')
     titles = book.select_library(keyword)
     return render_template('searchList.html',titles=titles)
+
+@app.route('/list')
+def books_list():
+    books_list = book.get_all_library()
+    return render_template('books_list.html', books=books_list)
+
+@app.route('/selectdel')
+def books_delete():
+    return render_template('delete_select.html')
+
+@app.route('/delete_books', methods=['POST'])
+def delete():
+    isbn = request.form.get('isbn')
+    book.delete_book(isbn)
+    return render_template('delcomplete.html')
+
 if __name__ == "__main__":
     app.run(debug=True)

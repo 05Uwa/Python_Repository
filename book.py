@@ -8,9 +8,8 @@ def get_connection():
 def get_all_library():
     connection = get_connection()
     cursor = connection.cursor()
-    cursor.execute(sql)
     
-    sql = 'SELECT title, author, publisher, isbn, type FROM books_Python'
+    sql = 'SELECT title, author, publisher, isbn FROM books_python'
     
     cursor.execute(sql)
     rows = cursor.fetchall()
@@ -23,8 +22,8 @@ def get_all_library():
 def select_library(titles):
     connection = get_connection()
     cursor = connection.cursor()
-    sql = "SELECT * FROM books_python  WHERE title LIKE %s OR author LIKE %s"
-    cursor.execute(sql, ('%' + titles + '%', '%' + titles + '%'))
+    sql = "SELECT * FROM books_python  WHERE title LIKE %s"
+    cursor.execute(sql, ('%' + titles + '%'))
     connection.commit()
     rows = cursor.fetchall()
     cursor.close()
@@ -34,12 +33,30 @@ def select_library(titles):
 def insert_library(title ,author,publisher, isbn):
     connection = get_connection()
     cursor = connection.cursor()
-    sql = 'INSERT INTO books_python VALUES (defalut, %s, %s, %s, %s)'
+    sql = 'INSERT INTO books_python VALUES (default, %s, %s, %s, %s)'
     cursor.execute(sql,(title,author,publisher,isbn))
     connection.commit()
     
     cursor.close()
     connection.close()
+    
+def delete_book(isbn):
+    sql = "DELETE FROM books_python WHERE isbn=%s"
+    count=0
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (isbn,))
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count = 1
+    finally :
+        connection.close()
+        cursor.close()
+    if count ==  1:
+        return 0
+    else :
+        return
     
     
     

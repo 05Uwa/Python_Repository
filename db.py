@@ -60,8 +60,8 @@ def login(user_name , password):
     return flg
 
 
-def rootlogin(root_name , rootpass):
-    sql = "SELECT hashed_pass, salt FROM root_user WHERE name = %s"
+def rootlogin(root_name,rootpass):
+    sql = "SELECT hashed_pass, salt FROM admin WHERE name = %s"
     flg = False
     try :
         connection = get_connection()
