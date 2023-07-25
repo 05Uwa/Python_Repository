@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h3>ログイン中</h3>
+    <h1>検索</h1>
+<form action="{{url_for('searchList')}}" method="get">
+    <input type="text" name="keyword">
+    <button type="submit">検索</button>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>タイトル</th>
+            <th>著作者</th>
+            <th>出版社</th>
+            <th>ISBN</th>
+            <th>状態</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+        <tr>
+            <td>{{ book[0] }}</td>
+            <td>{{ book[1] }}</td>
+            <td>{{ book[2] }}</td>
+            <td>{{ book[3] }}</td>
+            <td>{{ book[4] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>

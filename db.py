@@ -7,7 +7,7 @@ def get_connection():
 
 
 def insert_user(user_name, password):
-    sql = 'INSERT INTO Python_user VALUES ( default, %s , %s , %s)'
+    sql = 'INSERT INTO python_user VALUES ( default, %s , %s , %s)'
     salt = get_salt()
     hashed_password = get_hash(password, salt)
     try  :
@@ -38,17 +38,40 @@ def get_hash(password, salt):
     return hashed_password
 
 def login(user_name , password):
-    sql ="SELECT hashed_password, salt FROM admin WHERE name = %s"
+    sql = "SELECT hashed_pass, salt FROM python_user WHERE name = %s"
     flg = False
     try :
         connection = get_connection()
         cursor = connection.cursor()
-        cursor.execute(sql , (user_name,))
+        cursor.execute(sql, (user_name,))
         user= cursor.fetchone()
         if user != None:
             salt = user[1]
             
             hashed_password = get_hash(password, salt)
+            
+            if hashed_password == user[0]:
+                flg = True
+    except psycopg2.DatabaseError :
+        flg = False
+    finally :
+        cursor.close()
+        connection.close()
+    return flg
+
+
+def rootlogin(root_name , rootpass):
+    sql = "SELECT hashed_pass, salt FROM root_user WHERE name = %s"
+    flg = False
+    try :
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (root_name,))
+        user= cursor.fetchone()
+        if user != None:
+            salt = user[1]
+            
+            hashed_password = get_hash(rootpass, salt)
             
             if hashed_password == user[0]:
                 flg = True
