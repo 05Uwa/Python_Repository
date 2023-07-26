@@ -19,12 +19,11 @@ def get_all_library():
     
     return rows
 
-def select_library(titles):
-    connection = get_connection()
-    cursor = connection.cursor()
-    sql = "SELECT * FROM books_python  WHERE title LIKE %s"
-    cursor.execute(sql, ('%' + titles + '%'))
-    connection.commit()
+def search_library(title):
+    connection=get_connection()
+    cursor=connection.cursor()
+    sql="select * from books_python where title like %s"
+    cursor.execute(sql, ("%"+title+"%",))
     rows = cursor.fetchall()
     cursor.close()
     connection.close()
@@ -57,6 +56,3 @@ def delete_book(isbn):
         return 0
     else :
         return
-    
-    
-    

@@ -39,7 +39,7 @@ def login():
 @app.route('/login', methods=['GET'])
 def loginafter():
    books_list = book.get_all_library()
-   return render_template('loginafter.html', book_list=books_list)
+   return render_template('loginafter.html', book=books_list)
 
 @app.route('/rootLogin')
 def rootLogin():
@@ -73,13 +73,15 @@ def insert():
     isbn = request.args.get('isbn')
     
     count=book.insert_library(title,author,publisher,isbn)
-    return render_template('insertClear.html')    
+    return redirect(url_for('insertcl')) 
+                    
+                    
+@app.route('/insertClear')
+def insertcl():
+    books_list = book.get_all_library()
+    msg="本の登録が完了しました"
+    return render_template('insertClear.html',msg=msg,book=books_list)   
     
-@app.route('/serach')
-def searchList():
-    keyword = request.args.get('keyword')
-    titles = book.select_library(keyword)
-    return render_template('searchList.html',titles=titles)
 
 @app.route('/list')
 def books_list():
@@ -88,13 +90,24 @@ def books_list():
 
 @app.route('/selectdel')
 def books_delete():
-    return render_template('delete_select.html')
+    books_list = book.get_all_library()
+    return render_template('delete_select.html',book=books_list)
 
 @app.route('/delete_books', methods=['POST'])
 def delete():
     isbn = request.form.get('isbn')
     book.delete_book(isbn)
-    return render_template('delcomplete.html')
+    books_list = book.get_all_library()
+    return render_template('delcomplete.html',book=books_list)
+
+@app.route("/search", methods=["GET"])
+def search():
+    title = request.args.get("title")
+    if title == "":
+        books_list = book.get_all_library()
+        return render_template("loginafter.html", book=books_list)
+    books_list = book.search_library(title)
+    return render_template("searchList.html",book=books_list)
 
 if __name__ == "__main__":
     app.run(debug=True)
